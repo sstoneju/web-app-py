@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_REGISTRY: <docker-registry-url>
+  HELM_CHART_REPO: <helm-chart-repository-url>
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        run: |
+          docker build -t $DOCKER_REGISTRY/<app-name>:$GITHUB_SHA .
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+          docker push $DOCKER_REGISTRY/<app-name>:$GITHUB_SHA
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Package Helm chart
+        run: |
+          helm package <path-to-helm-chart>
+          curl --data-binary "@<app-name>.tgz" <helm-chart-repository-url>
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy to Kubernetes using ArgoCD
+        uses: argoproj-labs/argocd-action@v3.0.0
+        with:
+          command: app create
+          args: <app-name> --repo <git-repo-url> --path <path-to-helm-chart> --dest-server <kubernetes-server-url> --dest-namespace <kubernetes-namespace>
+        env:
+          ARGOCD_OPTS: --grpc-web
+
+      - name: Sync application using ArgoCD
+        uses: argoproj-labs/argocd-action@v3.0.0
+        with:
+          command: app sync
+          args: <app-name>
+        env:
+          ARGOCD_OPTS: --grpc-web
