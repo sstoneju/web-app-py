@@ -1,3 +1,4 @@
+import os
 from flask import jsonify, current_app as app
 
 
@@ -11,12 +12,13 @@ def welcome():
         pass
     return jsonify(data)
 
-@app.route("/home")
-def home_process():
+
+@app.route("/metadata")
+def metadata():
     data = {}
     try:
-        data['function'] = __name__
-        data["processes"] = "success"
+        data['ENV'] = os.environ.get('ENV', 'default')
+        data['PORT'] = os.environ.get("PORT", 3000)
     except Exception:
         pass
     return jsonify(data)
