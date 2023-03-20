@@ -1,3 +1,15 @@
+provider "aws" {
+  profile = "testkey"
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Environment = var.environment
+      Terraform = "True"
+    }
+  }
+}
+
 terraform {
   required_version = ">= 1.1.4"
 
@@ -10,19 +22,16 @@ terraform {
       version = "2.10.0"
     }
   }
-}
 
-provider "aws" {
-  profile = "testkey"
-  region = var.aws_region
-
-  default_tags {
-    tags = {
-      Environment = var.environment
-      Terraform = "True"
-    }
+  backend "s3" {
+      bucket = "test-eks-terraform-state"
+      key = "backend/test.tfstate"
+      region = "ap-northeast-2"
+      profile = "testkey"
+      # encrypt = true
   }
 }
+
 
 provider "kubernetes" {
   host                   = module.app_cluster.cluster_endpoint
