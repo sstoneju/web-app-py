@@ -1,26 +1,27 @@
-FROM python:3.8-slim-buster
+# syntax=docker/dockerfile:1
 
+FROM python:3.8-slim-buster
 LABEL Name="Python Flask Demo App" Version=1.4.2
 
-# Set environment
+# Get args
 ARG ENV
 ARG PORT
 
+# Set environment
+ENV ENV=${ENV}
+ENV PORT=${PORT}
+
 # Install base
-RUN apt-get -y update && apt-get -y install curl
-ENV POETRY_HOME="/opt/poetry"
-RUN curl -sSL https://install.python-poetry.org | python3 - --version 1.2.0
-RUN $POETRY_HOME/bin/poetry --version
+RUN apt-get -y update
 
 # Prepare file
 COPY run.py .
 COPY app ./app
-COPY pyproject.toml .
-COPY poetry.lock .
+COPY requirements.txt .
 
-# Install dependance
-RUN $POETRY_HOME/bin/poetry --no-root install
+# Install package
+RUN pip3 install -r requirements.txt
 
 EXPOSE $PORT
 
-CMD ["$POETRY_HOME/bin/poetry", "run", "python", "gunicorn", "-b", "0.0.0.0:$PORT", "run:app"]
+CMD [ "python3", "run.py"]
