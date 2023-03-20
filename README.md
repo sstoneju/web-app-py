@@ -3,7 +3,6 @@
 ## Setting for development
 ```sh
 # After installed poetry.
-$ 
 $ poetry install --no-root
 ```
 
@@ -15,8 +14,9 @@ $ export IMAGE="web-app-py"\
     TAG="1.0"\
     ENV="local"\
     PORT="3000"
+$ export DOCKER_ID={your_docker_id}
 $ poetry export --without-hashes --format=requirements.txt > requirements.txt
-$ docker build --no-cache --platform linux/x86_64 -t $IMAGE:$TAG --build-arg ENV=$ENV --build-arg PORT=$PORT .
+$ docker build --no-cache --platform linux/x86_64 -t $DOCKER_ID/$IMAGE:$TAG --build-arg ENV=$ENV --build-arg PORT=$PORT .
 ```
 
 ## helm을 이용하기
