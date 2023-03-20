@@ -19,6 +19,11 @@ $ poetry export --without-hashes --format=requirements.txt > requirements.txt
 $ docker build --no-cache --platform linux/x86_64 -t $DOCKER_ID/$IMAGE:$TAG --build-arg ENV=$ENV --build-arg PORT=$PORT .
 ```
 
+## Use terraform
+```sh
+$ terraform plan -var-file="config/dev.tfvars" -out=tfplan
+```
+
 ## helm을 이용하기
 ```sh
 # Install the chart for the develop environment
