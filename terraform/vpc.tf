@@ -1,3 +1,20 @@
+
+data "aws_availability_zones" "available" {}
+
+################################################################################
+# Common Locals
+################################################################################
+locals {
+  name        = "eks-vpc"
+  region      = "ap-northeast-2"
+
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+}
+
+################################################################################
+# VPC
+################################################################################
 module "vpc" {
   # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
   source  = "terraform-aws-modules/vpc/aws"

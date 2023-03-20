@@ -35,13 +35,22 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  host                   = module.app_cluster.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.app_cluster.cluster_certificate_authority_data)
+  host = module.eks_bottlerocket.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks_bottlerocket.cluster_certificate_authority_data)
 
   exec {
     api_version = "client.authentication.k8s.io/v1alpha1"
     command     = "aws"
     # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", module.app_cluster.cluster_id]
+    args = ["eks", "get-token", "--cluster-name", module.eks_bottlerocket.cluster_id]
   }
+}
+
+module "tags" {
+  source  = "clowdhaus/tags/aws"
+  version = "~> 1.0"
+
+  application = local.name
+  environment = "nonprod"
+  repository  = "https://github.com/clowdhaus/eks-reference-architecture"
 }
