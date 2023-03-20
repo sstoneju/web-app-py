@@ -1,26 +1,11 @@
-
 data "aws_availability_zones" "available" {}
 
-################################################################################
-# Common Locals
-################################################################################
-locals {
-  name        = "eks-vpc"
-  region      = "ap-northeast-2"
-
-  vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-}
-
-################################################################################
-# VPC
-################################################################################
 module "vpc" {
   # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.18"
 
-  name = local.name
+  name = local.vpc_name
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -33,11 +18,11 @@ module "vpc" {
   one_nat_gateway_per_az = false
 
   manage_default_network_acl    = true
-  default_network_acl_tags      = { Name = "${local.name}-default" }
+  default_network_acl_tags      = { Name = "${local.vpc_name}-default" }
   manage_default_route_table    = true
-  default_route_table_tags      = { Name = "${local.name}-default" }
+  default_route_table_tags      = { Name = "${local.vpc_name}-default" }
   manage_default_security_group = true
-  default_security_group_tags   = { Name = "${local.name}-default" }
+  default_security_group_tags   = { Name = "${local.vpc_name}-default" }
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1

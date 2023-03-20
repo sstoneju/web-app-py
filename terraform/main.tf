@@ -1,7 +1,14 @@
+locals {
+  profile = "testkey"
+  app_name = "web-app"
+  vpc_name = "eks-vpc"
+  region = "ap-northeast-2"
+  vpc_cidr = "10.0.0.0/16"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+}
 
 terraform {
-  # required_version = ">= 1.1.4"
-  required_version = ">= 1.4.0"
+  required_version = ">= 1.1.4"
 
   required_providers {
     aws = {
@@ -14,11 +21,11 @@ terraform {
   }
 
   backend "s3" {
-      bucket = "test-eks-terraform-state"
+      bucket = "tyler-tf-state-file"
       key = "backend/test.tfstate"
       region = "ap-northeast-2"
       profile = "testkey"
-      # encrypt = true
+      encrypt = true
   }
 }
 
@@ -50,7 +57,7 @@ module "tags" {
   source  = "clowdhaus/tags/aws"
   version = "~> 1.0"
 
-  application = local.name
+  application = local.app_name
   environment = "nonprod"
   repository  = "https://github.com/clowdhaus/eks-reference-architecture"
 }

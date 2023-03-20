@@ -11,7 +11,7 @@ module "eks_bottlerocket" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.10.0"
 
-  cluster_name    = "${local.name}-br"
+  cluster_name    = "${local.app_name}-br"
   cluster_version = "1.24"
 
   # EKS Addons
