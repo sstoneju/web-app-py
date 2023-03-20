@@ -1,5 +1,12 @@
 # web-app-py
 
+## Setting for development
+```sh
+# After installed poetry.
+$ 
+$ poetry install --no-root
+```
+
 ## Start local
 It need to start docker processor and defines the environment(IMAGE, TAG, ENV)
 and follow this bash command. This repo for practice to devops with kubernetes, helm, argoCD
@@ -8,6 +15,7 @@ $ export IMAGE="web-app-py"\
     TAG="1.0"\
     ENV="local"\
     PORT="3000"
+$ poetry export --without-hashes --format=requirements.txt > requirements.txt
 $ docker build --no-cache --platform linux/x86_64 -t $IMAGE:$TAG --build-arg ENV=$ENV --build-arg PORT=$PORT .
 ```
 
