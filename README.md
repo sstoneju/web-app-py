@@ -21,7 +21,9 @@ $ docker build --no-cache --platform linux/x86_64 -t $DOCKER_ID/$IMAGE:$TAG --bu
 
 ## Use terraform
 ```sh
-$ terraform plan -var-file="config/dev.tfvars" -out=tfplan
+$ terraform plan -var-file=config/dev.tfvars -out=planfile
+$ terraform apply "planfile"
+$ terraform destroy --force
 ```
 
 ## helm을 이용하기
