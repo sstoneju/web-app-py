@@ -1,14 +1,3 @@
-provider "aws" {
-  profile = "testkey"
-  region = var.aws_region
-
-  default_tags {
-    tags = {
-      Environment = var.environment
-      Terraform = "True"
-    }
-  }
-}
 
 terraform {
   # required_version = ">= 1.1.4"
@@ -17,7 +6,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.8.0"
+      version = "~> 4.47"
     }
     kubernetes = {
       version = "2.10.0"
@@ -33,6 +22,17 @@ terraform {
   }
 }
 
+provider "aws" {
+  profile = "testkey"
+  region = var.aws_region
+
+  default_tags {
+    tags = {
+      Environment = var.environment
+      Terraform = "True"
+    }
+  }
+}
 
 provider "kubernetes" {
   host                   = module.app_cluster.cluster_endpoint
