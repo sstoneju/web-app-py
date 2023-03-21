@@ -20,13 +20,13 @@ terraform {
     }
   }
 
-  backend "s3" {
-      bucket = "tyler-tf-state-file"
-      key = "backend/test.tfstate"
-      region = "ap-northeast-2"
-      profile = "testkey"
-      encrypt = true
-  }
+  # backend "s3" {
+  #     bucket = "tyler-tf-state-file"
+  #     key = "backend/test.tfstate"
+  #     region = "ap-northeast-2"
+  #     profile = "testkey"
+  #     encrypt = true
+  # }
 }
 
 provider "aws" {
